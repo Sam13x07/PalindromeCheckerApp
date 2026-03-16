@@ -1,35 +1,59 @@
 import java.util.Scanner;
 
-public class UseCase9PalindromeCheckerApp {
+public class UseCase10PalindromeCheckerApp {
 
-    public static boolean isPalindrome(String str, int start, int end) {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
 
-        if (start >= end) {
-            return true;
+        System.out.println("=== Palindrome Checker (Ignore Case & Spaces) ===\n");
+
+        while (true) {
+            System.out.print("Enter a string (or 'quit' to exit): ");
+            String input = scanner.nextLine().trim();
+
+            if (input.equalsIgnoreCase("quit")) {
+                System.out.println("Goodbye!");
+                break;
+            }
+
+            boolean isPalindrome = isPalindromeIgnoreCaseAndSpaces(input);
+
+            System.out.println("\nInput    : \"" + input + "\"");
+            System.out.println("Result   : " + (isPalindrome ? "YES, it is a palindrome" : "NO, not a palindrome"));
+            System.out.println("----------------------------------------\n");
         }
 
-        if (str.charAt(start) != str.charAt(end)) {
+        scanner.close();
+    }
+
+    public static boolean isPalindromeIgnoreCaseAndSpaces(String str) {
+        if (str == null) {
             return false;
         }
 
-        return isPalindrome(str, start + 1, end - 1);
+        String cleaned = str
+                .toLowerCase()
+                .replaceAll("[^a-z]", "");
+
+        return isPalindrome(cleaned);
     }
 
-    public static void main(String[] args) {
-
-        Scanner sc = new Scanner(System.in);
-
-        System.out.print("Enter a string: ");
-        String input = sc.nextLine();
-
-        boolean result = isPalindrome(input, 0, input.length() - 1);
-
-        if (result) {
-            System.out.println(input + " is a Palindrome.");
-        } else {
-            System.out.println(input + " is NOT a Palindrome.");
+    private static boolean isPalindrome(String s) {
+        if (s.isEmpty()) {
+            return true;
         }
 
-        sc.close();
+        int left = 0;
+        int right = s.length() - 1;
+
+        while (left < right) {
+            if (s.charAt(left) != s.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+
+        return true;
     }
 }
