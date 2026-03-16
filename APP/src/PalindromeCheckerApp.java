@@ -1,8 +1,23 @@
 import java.util.Scanner;
-import java.util.Deque;
-import java.util.ArrayDeque;
 
-public class UseCase7PalindromeCheckerApp {
+public class UseCase9PalindromeCheckerApp {
+
+    // Recursive method to check palindrome
+    public static boolean isPalindrome(String str, int start, int end) {
+
+        // Base condition
+        if (start >= end) {
+            return true;
+        }
+
+        // If characters are not equal
+        if (str.charAt(start) != str.charAt(end)) {
+            return false;
+        }
+
+        // Recursive call
+        return isPalindrome(str, start + 1, end - 1);
+    }
 
     public static void main(String[] args) {
 
@@ -11,25 +26,9 @@ public class UseCase7PalindromeCheckerApp {
         System.out.print("Enter a string: ");
         String input = sc.nextLine();
 
-        Deque<Character> deque = new ArrayDeque<>();
+        boolean result = isPalindrome(input, 0, input.length() - 1);
 
-        for (int i = 0; i < input.length(); i++) {
-            deque.addLast(input.charAt(i));
-        }
-
-        boolean isPalindrome = true;
-
-        while (deque.size() > 1) {
-            char front = deque.removeFirst();
-            char rear = deque.removeLast();
-
-            if (front != rear) {
-                isPalindrome = false;
-                break;
-            }
-        }
-
-        if (isPalindrome) {
+        if (result) {
             System.out.println(input + " is a Palindrome.");
         } else {
             System.out.println(input + " is NOT a Palindrome.");
