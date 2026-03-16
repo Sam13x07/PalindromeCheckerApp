@@ -41,7 +41,7 @@ class DequeStrategy implements PalindromeStrategy {
     }
 }
 
-public class UseCase12PalindromeCheckerApp {
+public class PalindromeCheckerApp {
     private PalindromeStrategy strategy;
 
     public void setStrategy(PalindromeStrategy strategy) {
@@ -57,7 +57,7 @@ public class UseCase12PalindromeCheckerApp {
     }
 
     public static void main(String[] args) {
-        UseCase12PalindromeCheckerApp app = new UseCase12PalindromeCheckerApp();
+        PalindromeCheckerApp app = new PalindromeCheckerApp();
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("=== UC12: Strategy Pattern Palindrome Checker ===");
