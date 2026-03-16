@@ -1,87 +1,47 @@
-import java.util.*;
+import java.util.Scanner;
 
 public class PalindromeCheckerApp {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("=== Palindrome Checker using Queue + Stack (UC6) ===");
+        System.out.println("=== Palindrome Checker - UC3: Using String Reverse ===");
         System.out.println("Enter a string to check if it is a palindrome:");
-        String input = scanner.nextLine();
+        String original = scanner.nextLine();
 
-        String cleaned = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+        String cleaned = original.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
 
         if (cleaned.isEmpty()) {
             System.out.println("No valid characters entered.");
+            scanner.close();
             return;
         }
 
-        boolean isPalindrome = isPalindromeUsingQueueAndStack(cleaned);
+        String reversed = reverseString(cleaned);
 
-        System.out.println("\nOriginal input     : " + input);
-        System.out.println("Cleaned version    : " + cleaned);
-        System.out.println("Is palindrome?     : " + isPalindrome);
+        boolean isPalindrome = cleaned.equals(reversed);
 
-        if (cleaned.length() <= 40) {
-            showComparisonProcess(cleaned);
+        System.out.println("\nOriginal input (cleaned): " + cleaned);
+        System.out.println("Reversed string         : " + reversed);
+        System.out.println("Is palindrome?          : " + isPalindrome);
+
+        if (isPalindrome) {
+            System.out.println("→ Yes, it reads the same forwards and backwards!");
         } else {
-            System.out.println("(String too long to show detailed step-by-step comparison)");
+            System.out.println("→ No, it is not a palindrome.");
         }
 
         scanner.close();
     }
 
-    public static boolean isPalindromeUsingQueueAndStack(String str) {
-        Queue<Character> queue = new LinkedList<>();
-        Stack<Character> stack = new Stack<>();
+    public static String reverseString(String str) {
+        String reversed = "";
 
-        for (char c : str.toCharArray()) {
-            queue.add(c);
-            stack.push(c);
+        for (int i = str.length() - 1; i >= 0; i--) {
+            reversed = reversed + str.charAt(i);
+
         }
 
-        while (!queue.isEmpty() && !stack.isEmpty()) {
-            char front = queue.remove();
-            char top   = stack.pop();
-
-            if (front != top) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public static void showComparisonProcess(String str) {
-        Queue<Character> queue = new LinkedList<>();
-        Stack<Character> stack = new Stack<>();
-
-        System.out.println("\nStep-by-step comparison:");
-        System.out.println("Character | Queue (FIFO) | Stack (LIFO)");
-        System.out.println("----------|--------------|-------------");
-
-        for (char c : str.toCharArray()) {
-            queue.add(c);
-            stack.push(c);
-        }
-
-        int step = 1;
-        while (!queue.isEmpty() && !stack.isEmpty()) {
-            char qChar = queue.remove();
-            char sChar = stack.pop();
-
-            String match = (qChar == sChar) ? "✓ match" : "✗ mismatch";
-
-            System.out.printf("%-9d | %-12c | %-c %s%n",
-                    step, qChar, sChar, match);
-
-            if (qChar != sChar) {
-                System.out.println("→ Not a palindrome");
-                return;
-            }
-            step++;
-        }
-
-        System.out.println("→ All characters matched → It is a palindrome!");
+        return reversed;
     }
 }
