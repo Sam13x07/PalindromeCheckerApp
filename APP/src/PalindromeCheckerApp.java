@@ -1,59 +1,94 @@
-import java.util.Scanner;
+import java.util.*;
 
-public class UseCase10PalindromeCheckerApp {
+interface PalindromeStrategy {
+    boolean isPalindrome(String input);
+}
+class StackStrategy implements PalindromeStrategy {
+    @Override
+    public boolean isPalindrome(String input) {
+        String clean = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+        Stack<Character> stack = new Stack<>();
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("=== Palindrome Checker (Ignore Case & Spaces) ===\n");
-
-        while (true) {
-            System.out.print("Enter a string (or 'quit' to exit): ");
-            String input = scanner.nextLine().trim();
-
-            if (input.equalsIgnoreCase("quit")) {
-                System.out.println("Goodbye!");
-                break;
-            }
-
-            boolean isPalindrome = isPalindromeIgnoreCaseAndSpaces(input);
-
-            System.out.println("\nInput    : \"" + input + "\"");
-            System.out.println("Result   : " + (isPalindrome ? "YES, it is a palindrome" : "NO, not a palindrome"));
-            System.out.println("----------------------------------------\n");
+        for (char c : clean.toCharArray()) {
+            stack.push(c);
         }
 
-        scanner.close();
+        StringBuilder reversed = new StringBuilder();
+        while (!stack.isEmpty()) {
+            reversed.append(stack.pop());
+        }
+
+        return clean.equals(reversed.toString());
     }
+}
 
-    public static boolean isPalindromeIgnoreCaseAndSpaces(String str) {
-        if (str == null) {
-            return false;
+class DequeStrategy implements PalindromeStrategy {
+    @Override
+    public boolean isPalindrome(String input) {
+        String clean = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+        Deque<Character> deque = new LinkedList<>();
+
+        for (char c : clean.toCharArray()) {
+            deque.addLast(c);
         }
 
-        String cleaned = str
-                .toLowerCase()
-                .replaceAll("[^a-z]", "");
-
-        return isPalindrome(cleaned);
-    }
-
-    private static boolean isPalindrome(String s) {
-        if (s.isEmpty()) {
-            return true;
-        }
-
-        int left = 0;
-        int right = s.length() - 1;
-
-        while (left < right) {
-            if (s.charAt(left) != s.charAt(right)) {
+        while (deque.size() > 1) {
+            if (!deque.removeFirst().equals(deque.removeLast())) {
                 return false;
             }
-            left++;
-            right--;
+        }
+        return true;
+    }
+}
+
+public class UseCase12PalindromeCheckerApp {
+    private PalindromeStrategy strategy;
+
+    public void setStrategy(PalindromeStrategy strategy) {
+        this.strategy = strategy;
+    }
+
+    public boolean executeCheck(String text) {
+        if (strategy == null) {
+            System.out.println("Error: Strategy not initialized.");
+            return false;
+        }
+        return strategy.isPalindrome(text);
+    }
+
+    public static void main(String[] args) {
+        UseCase12PalindromeCheckerApp app = new UseCase12PalindromeCheckerApp();
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("=== UC12: Strategy Pattern Palindrome Checker ===");
+        System.out.print("Enter text to check: ");
+        String userInput = scanner.nextLine();
+
+        System.out.println("\nSelect Algorithm Strategy:");
+        System.out.println("1. Stack Strategy (LIFO approach)");
+        System.out.println("2. Deque Strategy (Double-ended approach)");
+        System.out.print("Choice: ");
+
+        int choice = scanner.nextInt();
+
+        if (choice == 1) {
+            app.setStrategy(new StackStrategy());
+            System.out.println("Applied: StackStrategy");
+        } else if (choice == 2) {
+            app.setStrategy(new DequeStrategy());
+            System.out.println("Applied: DequeStrategy");
+        } else {
+            System.out.println("Invalid choice. Defaulting to Stack.");
+            app.setStrategy(new StackStrategy());
         }
 
-        return true;
+        boolean result = app.executeCheck(userInput);
+
+        System.out.println("------------------------------------");
+        System.out.println("Input: " + userInput);
+        System.out.println("Is Palindrome: " + result);
+        System.out.println("------------------------------------");
+
+        scanner.close();
     }
 }
